@@ -3,9 +3,6 @@ import Image from 'next/image'
 import {Header, Footer} from '../components/pageSections'
 import {Button} from '../components/button'
 
-const markdownInputChanged = (e) => {
-
-}
 export default function CreateMD() {
     return (
             <>
@@ -30,6 +27,7 @@ export default function CreateMD() {
                             <span className="block text-xl">Edit Markdown</span>
                             <ul className="h-fit w-full bg-slate-900 border-white border-2 list-none space-x-1 p-1">
                                 <li className="inline"><Button size="fit-content" padding=".5rem 1rem" backgroundColor='#6c5ce7'><b>B</b></Button></li>
+                                <li className="inline"><Button size="fit-content" padding=".5rem 1rem" backgroundColor='#6c5ce7'><u>U</u></Button></li>
                                 <li className="inline"><Button size="fit-content" padding=".5rem 1rem" backgroundColor='#6c5ce7'><i>I</i></Button></li>
                                 <li className="inline"><Button size="fit-content" padding=".5rem 1rem" backgroundColor='#6c5ce7'><s>S</s></Button></li>
                                 <li className="inline"><Button size="fit-content" padding=".5rem 1rem" backgroundColor='#6c5ce7'>H</Button></li>
@@ -38,7 +36,7 @@ export default function CreateMD() {
                                 <li className="inline"><Button size="fit-content" padding=".5rem 1rem" backgroundColor='#6c5ce7'>&#x7b; &#x7d;</Button></li>
                                 <li className="inline"><Button size="fit-content" padding=".5rem 1rem" backgroundColor='#6c5ce7'>&#x1F517;&#xFE0E;</Button></li>
                             </ul>
-                            <textarea onChange={markdownInputChanged} className="p-2 h-full w-full bg-slate-900 border-white border-2 focus:outline-none resize-none overflow-y-scroll text-white" />
+                            <textarea /*onChange={}*/ className="p-2 h-full w-full bg-slate-900 border-white border-2 focus:outline-none resize-none overflow-y-scroll text-white" />
                         </label>
                         <label htmlFor="mdContainer" className="w-1/2 flex flex-col">
                             <span className="block text-xl">View Markdown</span>
