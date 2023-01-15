@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import Image from 'next/image'
+import Link from 'next/link'
 
 interface buttonProps {
     content: string;
@@ -31,8 +32,10 @@ export const Button: FC<buttonProps> =
     <><Image src={icon} alt="" height="50" width="50" />{content}</> :
     <>{content}</>;
     return (<>
-    <a href={link} className="inline-flex justify-center items-center rounded gap-1" style={linkStyle}>
-        {resultContent}
-    </a>
+        <Link href={address}>
+            <span className="inline-flex justify-center items-center rounded gap-1" style={buttonStyle}>
+            {resultContent}
+            </span>
+        </Link>
     </>)
 };
