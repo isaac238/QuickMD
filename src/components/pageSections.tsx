@@ -1,8 +1,9 @@
 import {Button} from '../components/button'
+import { FC } from 'react';
 
 export const Header: FC = () => {
     return (<>
-    <header className="flex flex-row text-white justify-center text-xl p-2">
+    <header className="flex flex-row text-white items-center text-xl p-2">
         <Button content="Quick MD" backgroundColor="transparent" borderColor="transparent" address="/"/>
         <span className="ml-auto pr-4">
             <Button content="New MD +" backgroundColor="#009432" size="2rem" address='createmd'/>
