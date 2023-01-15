@@ -26,7 +26,7 @@ export const Link: FC<linkProps> =
 
     if (icon !== "") {
         return (<>
-            <a href={link} className="inline-flex justify-center items-center rounded" style={linkStyle}>
+            <a href={link} className="inline-flex justify-center items-center rounded gap-1" style={linkStyle}>
                 <Image src={icon} alt="" height="50" width="50" />
                 {content}
             </a>
