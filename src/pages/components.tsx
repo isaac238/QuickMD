@@ -23,21 +23,15 @@ export const Link: FC<linkProps> =
         padding: ".1rem",
         minWidth: "5rem"
     }
-
-    if (icon !== "") {
-        return (<>
-            <a href={link} className="inline-flex justify-center items-center rounded gap-1" style={linkStyle}>
-                <Image src={icon} alt="" height="50" width="50" />
-                {content}
-            </a>
-        </>)
-    } else {
-        return (<>
-            <a href={link} className="inline-flex justify-center items-center rounded" style={linkStyle}>
-                {content}
-            </a>
-        </>)
-    }
+    const isIcon = icon !== "";
+    const resultContent = isIcon ?
+    <><Image src={icon} alt="" height="50" width="50" />{content}</> :
+    <>{content}</>;
+    return (<>
+        <a href={link} className="inline-flex justify-center items-center rounded gap-1" style={linkStyle}>
+            {resultContent}
+        </a>
+    </>)
 };
 
 export const Footer: FC =
