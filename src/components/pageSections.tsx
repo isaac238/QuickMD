@@ -4,9 +4,9 @@ import { FC } from 'react';
 export const Header: FC = () => {
     return (<>
     <header className="flex flex-row text-white items-center text-xl p-2">
-        <Button content="Quick MD" backgroundColor="transparent" borderColor="transparent" address="/"/>
+        <Button backgroundColor="transparent" borderColor="transparent" address="/">Quick MD</Button>
         <span className="ml-auto pr-4">
-            <Button content="New MD +" backgroundColor="#009432" size="2rem" address='createmd'/>
+            <Button backgroundColor="#009432" size="2rem" address='createmd'>New MD +</Button>
         </span>
     </header>
     </>)
