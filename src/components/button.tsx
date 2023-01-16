@@ -17,8 +17,8 @@ interface buttonProps {
 
 export const Button: FC<buttonProps> =
 ({
-    children, disabled = false, borderColor = "#ffffff", address = "#", padding = ".1rem",
-    backgroundColor = "#222222", textColor = "#ffffff", icon = "", size = "5rem"} : buttonProps)=> {
+    children, disabled = false, borderColor = "#ffffff", address = "#", padding = ".5rem",
+    backgroundColor = "#222222", textColor = "#ffffff", icon = "", size = "fit-content"} : buttonProps)=> {
 
     const buttonStyle = {
         background: backgroundColor,
@@ -26,6 +26,7 @@ export const Button: FC<buttonProps> =
         color: textColor,
         padding: padding,
         minWidth: size,
+        minHeight: size,
     }
 
     const isIcon = icon !== "";
@@ -34,7 +35,7 @@ export const Button: FC<buttonProps> =
     <>{children}</>;
     return (<>
         <Link href={address}>
-            <span className="inline-flex justify-center items-center rounded gap-1" style={buttonStyle}>
+            <span className="inline-flex justify-center items-center rounded gap-1 h-fit" style={buttonStyle}>
             {resultContent}
             </span>
         </Link>
