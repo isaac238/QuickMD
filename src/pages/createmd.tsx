@@ -15,9 +15,9 @@ export default function CreateMD() {
             <Header />
             <main className="text-white flex flex-col gap-2 w-screen justify-center items-center">
                 <section className="w-4/5 p-5 h-full bg-slate-800 bg-opacity-40 rounded-3xl shadow-2xl">
-                <h1 className="text-3xl">Create MD</h1>
-                <form className="h-full w-full">
-                    <label htmlFor="fileName">
+                <form className="h-full w-full flex flex-col">
+                    <h1 className="text-3xl">Create MD</h1>
+                    <label htmlFor="fileName" className="pb-3">
                         <span className="block text-xl">File Name</span>
                         <input className="w-10/12 h-10 rounded bg-slate-900 border-solid border-white border-2 pl-5 focus:outline-none" type="text" name="fileName" placeholder="Please enter a file name"/>
                         <span className="pl-3"><Button backgroundColor="#6c5ce7">Import</Button></span>
