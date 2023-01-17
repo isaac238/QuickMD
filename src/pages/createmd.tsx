@@ -1,9 +1,30 @@
 import Head from 'next/head'
-import Image from 'next/image'
 import {Header, Footer} from '../components/pageSections'
 import {Button} from '../components/button'
+import {unified} from 'unified'
+import remarkParse from 'remark-parse'
+import remarkRehype from 'remark-rehype'
+import rehypeSanitize from 'rehype-sanitize'
+import rehypeStringify from 'rehype-stringify'
+import {ChangeEvent, useState, Fragment} from 'react'
+import parse from 'html-react-parser'
+
+
+async function parseMD(message: string) {
+    const file = await unified().use(remarkParse).use(remarkRehype).use(rehypeSanitize).use(rehypeStringify).process(message)
+    let toChange = String(file)
+    return toChange
+}
+
 
 export default function CreateMD() {
+    const [mD, setMd] = useState('')
+
+    async function onMdInputChange(event: ChangeEvent<HTMLTextAreaElement>) {
+        const result = await parseMD(event.target.value);
+        setMd(result);
+    }
+
     return (
             <>
             <Head>
@@ -22,8 +43,8 @@ export default function CreateMD() {
                         <input className="w-10/12 h-10 rounded bg-slate-900 border-solid border-white border-2 pl-5 focus:outline-none" type="text" name="fileName" placeholder="Please enter a file name"/>
                         <span className="pl-3"><Button backgroundColor="#6c5ce7">Import</Button></span>
                     </label>
-                    <section className="flex flex-row flex-wrap h-3/4 flex-1 mb-3">
-                        <label htmlFor="mdContainer" className="w-1/2 h-full flex flex-col">
+                    <section className="flex flex-row flex-wrap h-3/4 mb-3">
+                        <label htmlFor="mdContainer" className="w-1/2 flex flex-col items-start h-full">
                             <span className="block text-xl">Edit Markdown</span>
                             <ul className="h-fit w-full bg-slate-900 border-white border-2 list-none space-x-1 p-1">
                                 <li className="inline"><Button size="fit-content" padding=".5rem 1rem" backgroundColor='#6c5ce7'><b>B</b></Button></li>
@@ -36,11 +57,15 @@ export default function CreateMD() {
                                 <li className="inline"><Button size="fit-content" padding=".5rem 1rem" backgroundColor='#6c5ce7'>&#x7b; &#x7d;</Button></li>
                                 <li className="inline"><Button size="fit-content" padding=".5rem 1rem" backgroundColor='#6c5ce7'>&#x1F517;&#xFE0E;</Button></li>
                             </ul>
-                            <textarea /*onChange={}*/ className="p-2 h-full w-full bg-slate-900 border-white border-2 focus:outline-none resize-none overflow-y-scroll text-white" />
+                            <textarea id="mdInput" name="mdInput" onChange={onMdInputChange} className="p-2 h-full w-full bg-slate-900 border-white border-2 focus:outline-none resize-none overflow-y-scroll text-white" />
                         </label>
-                        <label htmlFor="mdContainer" className="w-1/2 flex flex-col">
+                        <label htmlFor="mdContainer" className="w-1/2 flex flex-col flex-grow flex-shrink-0 basis-0 items-start h-full">
                             <span className="block text-xl">View Markdown</span>
-                            <textarea className="p-2 h-full w-full bg-slate-900 border-white border-2 focus:outline-none resize-none overflow-y-scroll prose text-white" disabled/>
+                            <div className="relative p-2 h-full w-full ">
+                                <div className='block absolute overflow-y-scroll h-full w-full top-0 bottom-0 bg-slate-900 border-white border-2 focus:outline-none resize-none prose prose-invert text-white pl-3 pt-3'>
+                                {parse(mD)}
+                                </div>
+                            </div>
                         </label>
                     </section>
                     <Button backgroundColor='#00b894'>Save</Button>
