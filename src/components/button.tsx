@@ -35,7 +35,7 @@ export const Button: FC<buttonProps> =
     <>{children}</>;
     return (<>
         <Link href={address}>
-            <span className="inline-flex justify-center items-center rounded gap-1 h-fit" style={buttonStyle}>
+            <span className="inline-flex justify-center items-center rounded gap-1 h-fit hover:brightness-75" style={buttonStyle}>
             {resultContent}
             </span>
         </Link>
