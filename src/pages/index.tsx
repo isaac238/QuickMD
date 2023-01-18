@@ -15,8 +15,8 @@ export default function Home() {
     <main className="text-white flex flex-col gap-2 justify-center items-center w-screen">
         <h1 className="w-fit text-6xl">Quick MD</h1>
         <section className="flex w-fit gap-2 text-4xl">
-            <Button icon="/image/githubWhite.png" size="4rem" address="https://github.com/isaac238/QuickMD">GitHub</Button>
-            <Button backgroundColor="#009432" size="4rem" address='createmd'>New MD +</Button>
+            <Button icon="/image/githubWhite.png" size="4" address="https://github.com/isaac238/QuickMD" minHeight='60px'>GitHub</Button>
+            <Button backgroundColor="#009432" size="4" address='createmd' minHeight='60px'>New MD +</Button>
         </section>
     </main>
     <Footer/>

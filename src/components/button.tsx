@@ -12,20 +12,22 @@ interface buttonProps {
     size?: string;
     padding? : string;
     children: React.ReactNode;
+    minHeight?: string;    
 }
 
 export const Button: FC<buttonProps> =
 ({
     children, disabled = false, borderColor = "#ffffff", address = "#", padding = ".5rem",
-    backgroundColor = "#222222", textColor = "#ffffff", icon = "", size = "fit-content"} : buttonProps)=> {
+    backgroundColor = "#222222", textColor = "#ffffff", icon = "", size = "fit-content", minHeight = `${size}vh`} : buttonProps)=> {
 
     const buttonStyle = {
         background: backgroundColor,
         border: `${borderColor} solid .05rem`,
         color: textColor,
         padding: padding,
-        minWidth: size,
-        minHeight: size,
+        height: `${size}vh`,
+        minHeight: minHeight,
+        minWidth: `${size}vw`,
     }
 
     const isIcon = icon !== "";
