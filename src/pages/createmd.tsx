@@ -11,18 +11,37 @@ import parse from 'html-react-parser'
 
 
 async function parseMD(message: string) {
-    const file = await unified().use(remarkParse).use(remarkRehype).use(rehypeSanitize).use(rehypeStringify).process(message)
-    let toChange = String(file)
-    return toChange
+    const file = await unified().use(remarkParse).use(remarkRehype).use(rehypeSanitize).use(rehypeStringify).process(message);
+    let toChange = String(file);
+    return toChange;
 }
 
 
 export default function CreateMD() {
-    const [mD, setMd] = useState('')
+    const [mdInput, setMdInput] = useState('');
+    const [mdOutput, setMdOutput] = useState('');
+    const [mdFileName, setMdFileName] = useState('');
 
     async function onMdInputChange(event: ChangeEvent<HTMLTextAreaElement>) {
-        const result = await parseMD(event.target.value);
-        setMd(result);
+        setMdInput(event.target.value);
+        setMdOutput(await parseMD(event.target.value));
+           
+    }
+
+    const saveFile = () => {
+        const file = new Blob([mdInput], {type: "md"});
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(file);
+        a.download = `${mdFileName}.md`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        
+    
+    }
+
+    const fileNameChange = (event: React.FormEvent<HTMLInputElement>) => {
+        setMdFileName(event.currentTarget.value);
     }
 
     return (
@@ -40,7 +59,7 @@ export default function CreateMD() {
                     <h1 className="text-3xl">Create MD</h1>
                     <label htmlFor="fileName" className="pb-3">
                         <span className="block text-xl">File Name</span>
-                        <input className="w-10/12 h-10 rounded bg-slate-900 border-solid border-white border-2 pl-5 focus:outline-none" type="text" name="fileName" placeholder="Please enter a file name"/>
+                        <input onChange={fileNameChange} className="w-10/12 h-10 rounded bg-slate-900 border-solid border-white border-2 pl-5 focus:outline-none" type="text" name="fileName" placeholder="Please enter a file name"/>
                         <span className="pl-3"><Button backgroundColor="#6c5ce7">Import</Button></span>
                     </label>
                     <section className="flex flex-row flex-wrap h-3/4 mb-3">
@@ -63,12 +82,14 @@ export default function CreateMD() {
                             <span className="block text-xl">View Markdown</span>
                             <div className="relative p-2 h-full w-full ">
                                 <div className='block absolute overflow-y-scroll h-full w-full top-0 bottom-0 bg-slate-900 border-white border-2 focus:outline-none resize-none prose prose-invert text-white pl-3 pt-3'>
-                                {parse(mD)}
+                                {parse(mdOutput)}
                                 </div>
                             </div>
                         </label>
                     </section>
-                    <Button backgroundColor='#00b894'>Save</Button>
+                    <span onClick={saveFile}>
+                        <Button backgroundColor='#00b894'>Save</Button>
+                    </span>
                 </form>
                 </section>
             </main>
