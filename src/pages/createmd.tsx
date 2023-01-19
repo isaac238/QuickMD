@@ -33,11 +33,26 @@ export default function CreateMD() {
         var a = document.createElement('a');
         a.href = URL.createObjectURL(file);
         a.download = `${mdFileName}.md`;
-        document.body.appendChild(a);
         a.click();
         a.remove();
         
     
+    }
+
+    const inputFile = async () => {
+        const file = document.createElement('input');
+        file.type = "file";
+        file.className = "opacity-0 w-0 h-0";
+        file.accept = ".md"
+        file.click();
+        file.addEventListener("change", async function(e) {  
+            if (file.files != null) {
+                setMdFileName(file.files[0].name.replace(/\.[^/.]+$/, ""));
+                let fileContent = await file.files[0].text();
+                console.log(String(fileContent));
+                setMdInput(String(fileContent));
+            }
+        });
     }
 
     const fileNameChange = (event: React.FormEvent<HTMLInputElement>) => {
@@ -59,8 +74,8 @@ export default function CreateMD() {
                     <h1 className="text-3xl">Create MD</h1>
                     <label htmlFor="fileName" className="pb-3">
                         <span className="block text-xl">File Name</span>
-                        <input onChange={fileNameChange} className="w-10/12 h-10 rounded bg-slate-900 border-solid border-white border-2 pl-5 focus:outline-none" type="text" name="fileName" placeholder="Please enter a file name"/>
-                        <span className="pl-3"><Button backgroundColor="#6c5ce7">Import</Button></span>
+                        <input onChange={fileNameChange} className="w-10/12 h-10 rounded bg-slate-900 border-solid border-white border-2 pl-5 focus:outline-none" type="text" name="fileName" placeholder="Please enter a file name" value={mdFileName}/>
+                        <span className="pl-3" onClick={inputFile}><Button backgroundColor="#6c5ce7">Import</Button></span>
                     </label>
                     <section className="flex flex-row flex-wrap h-3/4 mb-3">
                         <label htmlFor="mdContainer" className="w-1/2 flex flex-col items-start h-full">
@@ -76,7 +91,7 @@ export default function CreateMD() {
                                 <li className="inline"><Button size="fit-content" padding=".5rem 1rem" backgroundColor='#6c5ce7'>&#x7b; &#x7d;</Button></li>
                                 <li className="inline"><Button size="fit-content" padding=".5rem 1rem" backgroundColor='#6c5ce7'>&#x1F517;&#xFE0E;</Button></li>
                             </ul>
-                            <textarea id="mdInput" name="mdInput" onChange={onMdInputChange} className="p-2 h-full w-full bg-slate-900 border-white border-2 focus:outline-none resize-none overflow-y-scroll text-white" />
+                            <textarea id="mdInput" name="mdInput" onChange={onMdInputChange} value={mdInput} className="p-2 h-full w-full bg-slate-900 border-white border-2 focus:outline-none resize-none overflow-y-scroll text-white" />
                         </label>
                         <label htmlFor="mdContainer" className="w-1/2 flex flex-col flex-grow flex-shrink-0 basis-0 items-start h-full">
                             <span className="block text-xl">View Markdown</span>
