@@ -51,6 +51,7 @@ export default function CreateMD() {
                 let fileContent = await file.files[0].text();
                 console.log(String(fileContent));
                 setMdInput(String(fileContent));
+                setMdOutput(await parseMD(String(fileContent)));
             }
         });
     }
