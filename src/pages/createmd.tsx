@@ -6,7 +6,7 @@ import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import rehypeSanitize from 'rehype-sanitize'
 import rehypeStringify from 'rehype-stringify'
-import {ChangeEvent, useState, Fragment} from 'react'
+import {ChangeEvent, useState, useRef, useEffect} from 'react'
 import parse from 'html-react-parser'
 
 
@@ -21,12 +21,39 @@ export default function CreateMD() {
     const [mdInput, setMdInput] = useState('');
     const [mdOutput, setMdOutput] = useState('');
     const [mdFileName, setMdFileName] = useState('');
+    const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
-    async function onMdInputChange(event: ChangeEvent<HTMLTextAreaElement>) {
-        setMdInput(event.target.value);
-        setMdOutput(await parseMD(event.target.value));
-           
+    // When MDInput set change MDOutput to reflect that.
+    useEffect(()=>{
+        updateOutput();
+    }, [mdInput])
+
+    async function updateOutput() {
+        setMdOutput(await parseMD(mdInput));
     }
+
+
+    function changedMdInputAreaValue(event: ChangeEvent<HTMLTextAreaElement>) {
+        setMdInput(event.target.value);
+    }
+
+
+    const clickedStyleButton = (appendValue: string, modifyStart: boolean, modifyEnd: boolean) => {
+        let startOfSelection = modifyStart? textAreaRef.current!.selectionStart : 0;
+        let endOfSelection = modifyEnd? textAreaRef.current!.selectionEnd : mdInput.length;
+        let startAppend = modifyStart? appendValue: "";
+        let endAppend = modifyEnd? appendValue: "";
+        let beforeSelection = mdInput.substring(0,startOfSelection);
+        let afterSelection = mdInput.substring(endOfSelection, mdInput.length);
+        let selectionContent = mdInput.substring(startOfSelection, endOfSelection);
+
+        const noSelection = startOfSelection == endOfSelection;
+        let newLine = noSelection? 
+        `${startAppend}${beforeSelection}${endAppend}`:
+        `${beforeSelection}${startAppend}${selectionContent}${endAppend}${afterSelection}`;
+        setMdInput(newLine);
+    }
+
 
     const saveFile = () => {
         const file = new Blob([mdInput], {type: "md"});
@@ -35,9 +62,8 @@ export default function CreateMD() {
         a.download = `${mdFileName}.md`;
         a.click();
         a.remove();
-        
-    
     }
+
 
     const inputFile = async () => {
         const file = document.createElement('input');
@@ -51,14 +77,15 @@ export default function CreateMD() {
                 let fileContent = await file.files[0].text();
                 console.log(String(fileContent));
                 setMdInput(String(fileContent));
-                setMdOutput(await parseMD(String(fileContent)));
             }
         });
     }
 
-    const fileNameChange = (event: React.FormEvent<HTMLInputElement>) => {
+
+    const changedFileName = (event: React.FormEvent<HTMLInputElement>) => {
         setMdFileName(event.currentTarget.value);
     }
+
 
     return (
             <>
@@ -75,26 +102,24 @@ export default function CreateMD() {
                     <h1 className="text-3xl">Create MD</h1>
                     <label htmlFor="fileName" className="pb-3">
                         <span className="block text-xl">File Name</span>
-                        <input onChange={fileNameChange} className="w-10/12 h-10 rounded bg-slate-900 border-solid border-white border-2 pl-5 focus:outline-none" type="text" name="fileName" placeholder="Please enter a file name" value={mdFileName}/>
+                        <input onChange={changedFileName} className="w-10/12 h-10 rounded bg-slate-900 border-solid border-white border-2 pl-5 focus:outline-none" type="text" name="fileName" placeholder="Please enter a file name" value={mdFileName}/>
                         <span className="pl-3" onClick={inputFile}><Button backgroundColor="#6c5ce7">Import</Button></span>
                     </label>
                     <section className="flex flex-row flex-wrap h-3/4 mb-3">
-                        <label htmlFor="mdContainer" className="w-1/2 flex flex-col items-start h-full">
+                        <label className="w-1/2 flex flex-col items-start h-full">
                             <span className="block text-xl">Edit Markdown</span>
                             <ul className="h-fit w-full bg-slate-900 border-white border-2 list-none space-x-1 p-1">
-                                <li className="inline"><Button size="fit-content" padding=".5rem 1rem" backgroundColor='#6c5ce7'><b>B</b></Button></li>
-                                <li className="inline"><Button size="fit-content" padding=".5rem 1rem" backgroundColor='#6c5ce7'><u>U</u></Button></li>
-                                <li className="inline"><Button size="fit-content" padding=".5rem 1rem" backgroundColor='#6c5ce7'><i>I</i></Button></li>
-                                <li className="inline"><Button size="fit-content" padding=".5rem 1rem" backgroundColor='#6c5ce7'><s>S</s></Button></li>
-                                <li className="inline"><Button size="fit-content" padding=".5rem 1rem" backgroundColor='#6c5ce7'>H</Button></li>
-                                <li className="inline"><Button size="fit-content" padding=".5rem 1rem" backgroundColor='#6c5ce7'>&bull;</Button></li>
-                                <li className="inline"><Button size="fit-content" padding=".5rem 1rem" backgroundColor='#6c5ce7'>1.</Button></li>
-                                <li className="inline"><Button size="fit-content" padding=".5rem 1rem" backgroundColor='#6c5ce7'>&#x7b; &#x7d;</Button></li>
-                                <li className="inline"><Button size="fit-content" padding=".5rem 1rem" backgroundColor='#6c5ce7'>&#x1F517;&#xFE0E;</Button></li>
+                                <li className="inline" onClick={()=> clickedStyleButton("**", true, true)}><Button size="fit-content" padding=".5rem 1rem" backgroundColor='#6c5ce7'><b>B</b></Button></li>
+                                <li className="inline" onClick={()=> clickedStyleButton("*", true, true)}><Button size="fit-content" padding=".5rem 1rem" backgroundColor='#6c5ce7'><i>I</i></Button></li>
+                                <li className="inline" onClick={()=> clickedStyleButton("# ", true, false)}><Button size="fit-content" padding=".5rem 1rem" backgroundColor='#6c5ce7'>H</Button></li>
+                                <li className="inline" onClick={()=> clickedStyleButton("- ", true, false)}><Button size="fit-content" padding=".5rem 1rem" backgroundColor='#6c5ce7'>&bull;</Button></li>
+                                <li className="inline" onClick={()=> clickedStyleButton("1. ", true, false)}><Button size="fit-content" padding=".5rem 1rem" backgroundColor='#6c5ce7'>1.</Button></li>
+                                <li className="inline" onClick={()=> clickedStyleButton("`", true, true)}><Button size="fit-content" padding=".5rem 1rem" backgroundColor='#6c5ce7'>&#x7b; &#x7d;</Button></li>
+                                <li className="inline" onClick={()=> clickedStyleButton("[]", true, false)}><Button size="fit-content" padding=".5rem 1rem" backgroundColor='#6c5ce7'>&#x1F517;&#xFE0E;</Button></li>
                             </ul>
-                            <textarea id="mdInput" name="mdInput" onChange={onMdInputChange} value={mdInput} className="p-2 h-full w-full bg-slate-900 border-white border-2 focus:outline-none resize-none overflow-y-scroll text-white" />
+                            <textarea ref={textAreaRef} id="mdInputArea" onChange={changedMdInputAreaValue} value={mdInput} className="p-2 h-full w-full bg-slate-900 border-white border-2 focus:outline-none resize-none overflow-y-scroll text-white" />
                         </label>
-                        <label htmlFor="mdContainer" className="w-1/2 flex flex-col flex-grow flex-shrink-0 basis-0 items-start h-full">
+                        <label className="w-1/2 flex flex-col flex-grow flex-shrink-0 basis-0 items-start h-full">
                             <span className="block text-xl">View Markdown</span>
                             <div className="relative p-2 h-full w-full ">
                                 <div className='block absolute overflow-y-scroll h-full w-full top-0 bottom-0 bg-slate-900 border-white border-2 focus:outline-none resize-none prose prose-invert text-white pl-3 pt-3'>
